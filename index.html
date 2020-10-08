@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <title>Document</title>
+    <style>
+        /* .full {
+            background-color: azure;
+            height: 700px;
+        } */
+        .inputBox {
+            margin-top: 100px;
+            margin-bottom: 100px;
+            /* box-shadow: 5px 5px 5px gray; */
+            /* margin-left: 50%; */
+        }
+
+        .Button {
+            margin-left: 30px;
+        }
+
+        #userDisplay {
+            border: 1px solid gray;
+            display: none;
+            box-shadow: 5px 5px 5px gray;
+            border-radius: 10px;
+            background-color: rgb(255, 255, 255);
+        }
+
+        #userDetails {
+            margin-top: 50px;
+            background-color: #BDDEFA;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+            margin-bottom: 50px;
+        }
+
+        p {
+            color: rgb(255, 47, 127);
+            text-align: center;
+            padding: 15px 15px;
+            margin: 20px;
+            background-color: rgb(207, 214, 214);
+            font-size: large;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="full">
+        <div class="container">
+            <div class="inputBox d-flex justify-content-center">
+                <input type="number" class="mx-sm-3" id="inputValue">
+                <button type="submit" id="Button" class="btn btn-primary mb-2">Load Data</button><br>
+            </div>
+            <hr>
+            <div id="userDisplay">
+
+            </div>
+
+            <div id="userDetails">
+
+            </div>
+        </div>
+
+
+
+    </section>
+    <script>
+        const inputValue = document.getElementById("inputValue");
+        const Button = document.getElementById("Button");
+        const userDisplay = document.getElementById("userDisplay");
+        Button.addEventListener("click", function () {
+            //console.log(inputValue.value);
+            userDisplay.innerHTML = "";
+            const Value = inputValue.value;
+            fetch(`https://jsonplaceholder.typicode.com/users/`)
+                .then(response => response.json())
+                .then(user => {
+                    document.getElementById("userDetails").style.display = "none";
+                    document.getElementById("inputValue").value = "";
+                    for (let i = 0; i < Value; i++) {
+                        console.log(user[i].name, i);
+                        const p = document.createElement("P");
+                        p.innerHTML = `<strong> Name: ${user[i].name} </strong> <button type="submit" onclick="getUserDetails(${i + 1})" class="btn btn-secondary mb-2">Get Details</button><br>`;
+                        userDisplay.appendChild(p);
+                        document.getElementById("userDisplay").style.display = "block";
+                    }
+
+                })
+
+        })
+        function getUserDetails(userID) {
+
+            fetch(`https://jsonplaceholder.typicode.com/users/${userID}`)
+                .then(response => response.json())
+                .then(user => {
+                    //  document.getElementById("userDetails").style.display = "none";
+                    const userDetails = document.getElementById("userDetails");
+                    userDetails.innerHTML = ""
+                    const p = document.createElement("P");
+                    p.innerHTML = `
+                    <h1 style="color:Tomato;">${user.name}</h1>
+                    <h4 style="color:DodgerBlue;">Email: ${user.email}</h4>
+                    <h4 style="color:MediumSeaGreen;">Phone Number : ${user.phone}</h4>
+                    <h4 style="color:DodgerBlue;">Web Site : ${user.website}</h4>
+                    `
+                    userDetails.appendChild(p);
+                    document.getElementById("userDetails").style.display = "block";
+
+                })
+
+        }
+
+
+    </script>
+</body>
+
+</html>
